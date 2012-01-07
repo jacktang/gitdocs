@@ -167,3 +167,12 @@ but provide the features that makes dropbox great. If you are interested in othe
    lacks revision history, author tracking, etc and we have features planned that are out of scope for this project
 
 If any other open-source dropbox alternatives are available, we would love to hear about them so let us know!
+
+## Merge from other forks
+
+* Merge the master fork
+  <pre>
+  git remote add baz-fork git://github.com/jacktang/rinterface.git
+  git pull baz-fork master
+  git push origin
+  </pre>
