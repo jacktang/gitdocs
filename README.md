@@ -5,21 +5,21 @@ gitdocs will automatically keep everyone's repos in sync by pushing and pulling 
 This allows any git repo to be used as a collaborative task list, file share, or wiki for a team.
 Supports a web front-end allowing each repo to be accessed through your browser.
 
-**Note:** Gitdocs uses [joshbuddy-guard](https://github.com/joshbuddy/guard) for file system monitoring. This
-means that gitdocs works on Mac OSX, Linux and Windows. That being said, we have only currently
-tested on Mac OSX and our notifications are still mac-only. Stay tuned.
+**Note:** Gitdocs has been tested on multiple unix systems including Mac OS X and Ubuntu.
+Windows support is [half-baked](https://github.com/bazaarlabs/gitdocs/issues/7)
+but we plan to tackle that shortly in an upcoming release.
 
 ## Why?
 
-Why should you use gitdocs for your file and doc sharing needs?
+Why use gitdocs for your file and doc sharing needs?
 
  * **Open** - gitdocs is entirely open-source under the MIT license
  * **Simple** - gitdocs is the simplest thing that works in both setup and usage
  * **Secure** - gitdocs leverages git (and existing providers like github) to store your data safely.
- * **Versatile** - share task lists, code snippets, images, files or just use it as a wiki (with our web front-end)
- * **Portable** - access your files anywhere you can use git (with upcoming cross-platform support)
+ * **Versatile** - share task lists, code snippets, images, files or just use it as a wiki (with our web front-end).
+ * **Portable** - access your files on any client that can use git.
 
-The best part is that giving this a try is quick and easy.
+The best part is that getting started using this project is quick and simple.
 
 ## Quick Start
 
@@ -55,7 +55,7 @@ If you have Growl installed on Max OSX, you'll probably want to run:
 brew install growlnotify
 ```
 
-to enable Growl support (other platforms coming soon).
+to enable Growl notification support.
 
 ## Usage
 
@@ -125,6 +125,7 @@ Gitdocs come with a handy web front-end that is available.
 This browser front-end supports the following features:
 
  * Explore the files within all your shares
+ * View revision history for every file in your share
  * View source files in your shares with code syntax highlighting
  * View text files in your shares with smart formatting (markdown, textile)
  * View any file in your shares that can be rendered inline (pdf, images, et al)
@@ -144,19 +145,39 @@ Don't worry, gitdocs makes handling this simple. In the event of a conflict,
 **all the different versions of a document are stored** in the repo tagged with the **git sha** for each
 committed version. The members of the repo can then compare all versions and resolve the conflict.
 
+## Gitdocs in Practice
+
+At Miso, our team actually uses gitdocs in conjunction with Dropbox. We find Dropbox is ideal for galleries, videos,
+and large binary files of all sorts. We use gitdocs for storing our actual "docs":
+Task lists, wiki pages, planning docs, collaborative designs, notes, guides, code snippets, etc.
+
+You will find that the gitdocs browser front-end is well suited for this usage scenario
+since you can browse formatted wiki pages, view files with smart syntax highlighting,
+edit files with a rich text editor, search all your files, as well as view individual file revision histories.
+
 ## Planned Features
 
-Gitdocs is a young project but we have big plans for it including:
+Gitdocs is a young project but we have many plans for it including:
 
+ - Better handling of large binary files circumventing known git limitations
  - Click-to-share instant access granting file access to users using a local tunnel or other means.
- - Indexing and full-text search for all documents in a repo
- - Better access to the versions for a particular file within the web front-end
  - Tagging and organizing of files within the web front-end
+ - Better access to the versions for a particular file within the web front-end
+
+## Contributors
+
+Gitdocs was created at [Miso](http://engineering.gomiso.com) by [Joshua Hull](https://github.com/joshbuddy) and [Nathan Esquenazi](https://github.com/nesquena).
+We also have had several contributors:
+
+  * [Chris Kempson](https://github.com/ChrisKempson) - Encoding issues
+  * [Evan Tatarka](https://github.com/evant) - Browser fixes
+
+Gitdocs is still a young project with a lot of opportunity for contributions. Patches welcome!
 
 ## Prior Projects
 
-Gitdocs is a fresh project that we spiked on in a few days time. Our primary goals are to keep the code as simple as possible,
-but provide the features that makes dropbox great. If you are interested in other Dropbox alternatives, be sure to checkout our notes below:
+Gitdocs is a fresh project that we originally spiked on in a few days time. Our primary goals are to keep the code as simple as possible,
+but provide the features that makes Dropbox great. If you are interested in other Dropbox alternatives, be sure to checkout our notes below:
 
  * [SparkleShare](http://sparkleshare.org/) is an open source, self-hosted Dropbox alternative written using C# and the [Mono Project](http://www.mono-project.com/Main_Page).
    More mature but has a lot of dependencies, and lacks some of the features planned in Gitdocs.

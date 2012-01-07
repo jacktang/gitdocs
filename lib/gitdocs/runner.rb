@@ -13,15 +13,24 @@ module Gitdocs
 
     SearchResult = Struct.new(:file, :context)
     def search(term)
+      return [] if term.empty?
+
       results = []
       if result_test = sh_string("git grep -i #{ShellTools.escape(term)}")
-        result_test.scan(/(.*?):([^\n]*)/) { |(file, context)| results << SearchResult.new(file, context) }
+        result_test.scan(/(.*?):([^\n]*)/) do |(file, context)| 
+          if result = results.find { |s| s.file == file }
+            result.context += ' ... ' + context
+          else
+            results << SearchResult.new(file, context)
+          end
+        end
       end
       results
     end
 
     def run
-      return false unless self.valid? && !self.root.empty?
+      return false unless self.valid?
+
       @show_notifications = @share.notification
       @current_remote     = @share.remote_name
       @current_branch     = @share.branch_name
@@ -139,11 +148,15 @@ module Gitdocs
     end
 
     IGNORED_FILES = ['.gitignore']
+    # Returns the list of files in a given directory
     # dir_files("some/dir") => [<Docfile>, <Docfile>]
     def dir_files(dir_path)
       Dir[File.join(dir_path, "*")].to_a.map { |path| Docfile.new(path) }
     end
 
+    # Returns file meta data based on relative file path
+    # file_meta("path/to/file")
+    #  => { :author => "Nick", :size => 1000, :modified => ... }
     def file_meta(file)
       result = {}
       file = file.gsub(%r{^/}, '')
@@ -152,14 +165,43 @@ module Gitdocs
       result =  {} unless File.exist?(full_path) && log_result
       author, modified = log_result.split("|")
       modified = Time.parse(modified.sub(' ', 'T')).utc.iso8601
-      size = (File.symlink?(full_path) || File.directory?(full_path)) ? -1 : File.size(full_path)
+      size = if File.directory?(full_path)
+               Dir[File.join(full_path, '**', '*')].inject(0) do |size, file|
+                 File.symlink?(file) ? size : size += File.size(file)
+               end
+             else
+               File.symlink?(full_path) ? 0 : File.size(full_path)
+             end
+      size = -1 if size == 0 # A value of 0 breaks the table sort for some reason
       result = { :author => author, :size => size, :modified => modified }
       result
     end
 
+    # Returns the revisions available for a particular file
+    # file_revisions("README")
+    def file_revisions(file)
+      file = file.gsub(%r{^/}, '')
+      output = sh_string("git log --format='%h|%s|%aN|%ai' -n100 #{ShellTools.escape(file)}")
+      output.to_s.split("\n").map do |log_result|
+        commit, subject, author, date = log_result.split("|")
+        date = Time.parse(date.sub(' ', 'T')).utc.iso8601
+        { :commit => commit, :subject => subject, :author => author, :date => date }
+      end
+    end
+
+    # Returns the temporary path of a particular revision of a file
+    # file_revision_at("README", "a4c56h") => "/tmp/some/path/README"
+    def file_revision_at(file, ref)
+      file = file.gsub(%r{^/}, '')
+      content = sh_string("git show #{ref}:#{ShellTools.escape(file)}")
+      tmp_path = File.expand_path(File.basename(file), Dir.tmpdir)
+      File.open(tmp_path, 'w') { |f| f.puts content }
+      tmp_path
+    end
+
     def valid?
       out, status = sh_with_code "git status"
-      status.success?
+      @root.present? && status.success?
     end
 
     def warn(title, msg)
