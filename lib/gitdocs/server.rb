@@ -21,7 +21,11 @@ module Gitdocs
         use Rack::MethodOverride
         run Renee {
           if request.path_info == '/'
-            render! "home", :layout => 'app', :locals => {:conf => manager.config, :nav_state => "home" }
+            if manager.config.shares.size == 1
+              redirect! "/0"
+            else
+              render! "home", :layout => 'app', :locals => {:conf => manager.config, :nav_state => "home" }
+            end
           else
             path 'settings' do
               get.render! 'settings', :layout => 'app', :locals => {:conf => manager.config, :nav_state => "settings" }
@@ -89,7 +93,11 @@ module Gitdocs
                 render! "edit", :layout => 'app', :locals => locals.merge(:contents => "")
               elsif File.directory?(expanded_path) # list directory
                 contents =  gd.dir_files(expanded_path)
-                render! "dir", :layout => 'app', :locals => locals.merge(:contents => contents)
+                rendered_readme = nil
+                if readme = Dir[File.expand_path("README.{md,txt}", expanded_path)].first
+                  rendered_readme = '<h3>' + File.basename(readme) + '</h3><div class="tilt">' + render(readme) + '</div>'
+                end
+                render! "dir", :layout => 'app', :locals => locals.merge(:contents => contents, :rendered_readme => rendered_readme)
               elsif mode == "revisions" # list revisions
                 revisions = gd.file_revisions(file_path)
                 render! "revisions", :layout => 'app', :locals => locals.merge(:revisions => revisions)
