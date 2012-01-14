@@ -192,8 +192,8 @@ If any other open-source dropbox alternatives are available, we would love to he
 ## Merge from other forks
 
 * Merge the master fork
-  <pre>
-  git remote add baz-fork git://github.com/jacktang/rinterface.git
+<pre>
+  git remote add baz-fork https://github.com/bazaarlabs/gitdocs.git
   git pull baz-fork master
   git push origin
-  </pre>
+</pre>
