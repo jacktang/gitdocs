@@ -126,6 +126,7 @@ This browser front-end supports the following features:
 
  * Explore the files within all your shares
  * View revision history for every file in your share
+ * Revert a file to any previous state in the file's history
  * View source files in your shares with code syntax highlighting
  * View text files in your shares with smart formatting (markdown, textile)
  * View any file in your shares that can be rendered inline (pdf, images, et al)
@@ -170,7 +171,8 @@ Gitdocs was created at [Miso](http://engineering.gomiso.com) by [Joshua Hull](ht
 We also have had several contributors:
 
   * [Chris Kempson](https://github.com/ChrisKempson) - Encoding issues
-  * [Evan Tatarka](https://github.com/evant) - Browser fixes
+  * [Evan Tatarka](https://github.com/evant) - Front-end style fixes
+  * [Kale Worsley](https://github.com/kaleworsley) - Custom commit msgs, revert revisions, front-end cleanup
 
 Gitdocs is still a young project with a lot of opportunity for contributions. Patches welcome!
 
